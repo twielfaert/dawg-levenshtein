@@ -57,7 +57,7 @@ class PyEditOperation:
         return self.__str__()
 
 cdef to_unicode(char str):
-    return (<bytes> str).decode("UTF-8") if str else ""
+    return (<bytes> str).encode("UTF-8") if str else ""
 
 cdef class PyDawg:
     cdef Dawg *thisptr
@@ -66,16 +66,16 @@ cdef class PyDawg:
     def __dealloc__(self):
         del self.thisptr
     def insert(self, unicode word):
-        cdef string w = word.decode("UTF-8")
+        cdef string w = word.encode("UTF-8")
         self.thisptr.insert(w)
     def finish(self):
         self.thisptr.finish()
     def contains(self, unicode word):
-        cdef string w = word.decode("UTF-8")
+        cdef string w = word.encode("UTF-8")
         cdef bint result = self.thisptr.contains(w)
         return result
     def fuzzy_search(self, unicode word, int fuzziness):
-        cdef string w = word.decode("UTF-8")
+        cdef string w = word.encode("UTF-8")
         cdef vector[WordResult] results = self.thisptr.fuzzy_search(w, fuzziness)
         pyres = []
         for i in range(results.size()):
@@ -90,8 +90,8 @@ cdef class PyDawg:
             pyres.append(res)
         return pyres
     def load(self, unicode filename):
-        cdef string f = filename.decode("UTF-8")
+        cdef string f = filename.encode("UTF-8")
         self.thisptr.load(f)
     def save(self, unicode filename):
-        cdef string f = filename.decode("UTF-8")
+        cdef string f = filename.encode("UTF-8")
         self.thisptr.save(f)
